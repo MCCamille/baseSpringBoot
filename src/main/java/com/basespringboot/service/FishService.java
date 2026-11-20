@@ -19,7 +19,6 @@ public class FishService {
         this.fishRepository = fishRepository;
     }
 
-    // Créer un poisson
     public FishDTO createFish(FishDTO fishDTO) {
 
         Fish fish = new Fish();
@@ -31,7 +30,6 @@ public class FishService {
         return convertToDTO(savedFish);
     }
 
-    // Récupérer un poisson par son ID
     public FishDTO getFish(Long id) {
 
         Fish fish = fishRepository.findById(id)
@@ -40,7 +38,6 @@ public class FishService {
         return convertToDTO(fish);
     }
 
-    // Récupérer tous les poissons
     public List<FishDTO> getAllFish() {
 
         return fishRepository.findAll()
@@ -49,7 +46,6 @@ public class FishService {
                 .toList();
     }
 
-    // Convertir une entité Fish en FishDTO
     private FishDTO convertToDTO(Fish fish) {
 
         FishDTO dto = new FishDTO();
