@@ -1,3 +1,15 @@
+package com.basespringboot.service;
+
+import com.basespringboot.dto.FishDTO;
+import com.basespringboot.entity.Fish;
+import com.basespringboot.repository.FishRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@SuppressWarnings("unused")
 @Service
 public class FishService {
 
@@ -7,26 +19,52 @@ public class FishService {
         this.fishRepository = fishRepository;
     }
 
-    @Transactional
+    // Créer un poisson
     public FishDTO createFish(FishDTO fishDTO) {
+
         Fish fish = new Fish();
+
         fish.setName(fishDTO.getName());
-        // initialiser ici les valeurs par défaut si besoin
-        return convertToDTO(fishRepository.save(fish));
+
+        Fish savedFish = fishRepository.save(fish);
+
+        return convertToDTO(savedFish);
     }
 
-    @Transactional(readOnly = true)
+    // Récupérer un poisson par son ID
     public FishDTO getFish(Long id) {
+
         Fish fish = fishRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Fish not found: " + id));
+                .orElseThrow(() -> new RuntimeException("Fish not found"));
+
         return convertToDTO(fish);
     }
 
-    @Transactional(readOnly = true)
+    // Récupérer tous les poissons
     public List<FishDTO> getAllFish() {
-        return fishRepository.findAll().stream().map(this::convertToDTO).toList();
+
+        return fishRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
-    private FishDTO convertToDTO(Fish fish) { /* inchangé */ }
+    // Convertir une entité Fish en FishDTO
+    private FishDTO convertToDTO(Fish fish) {
+
+        FishDTO dto = new FishDTO();
+
+        dto.setId(fish.getId());
+        dto.setName(fish.getName());
+        dto.setHunger(fish.getHunger());
+        dto.setThirst(fish.getThirst());
+        dto.setSleep(fish.getSleep());
+        dto.setMentalHealth(fish.getMentalHealth());
+        dto.setMoney(fish.getMoney());
+        dto.setCurrentDay(fish.getCurrentDay());
+        dto.setAlive(fish.isAlive());
+        dto.setDied(fish.isDied());
+
+        return dto;
+    }
 }
